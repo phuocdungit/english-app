@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1b5fd0" />
+    <meta name="robots" content="noindex" />
+    <title>Lớp học 1-1 · Trang chủ</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="home">
+      <div class="home-inner">
+        <header class="brand">
+          <h1>🎈 Lớp học tiếng Anh 1-1</h1>
+          <p>Cô và bé học cùng nhau: xem bài, vẽ chú thích, nói chuyện trực tiếp.</p>
+        </header>
+
+        <!-- ============ Ô đăng nhập / vào phòng ============ -->
+        <section id="authView" class="card">
+          <div class="role-grid">
+            <!-- Giáo viên -->
+            <div class="role-card">
+              <span class="emoji">👩‍🏫</span>
+              <h2>Tôi là giáo viên</h2>
+              <p class="hint">Nhập mật khẩu để tạo phòng và tải bài học lên.</p>
+              <form id="teacherForm" autocomplete="off">
+                <label class="field">
+                  <span>Mật khẩu giáo viên</span>
+                  <input id="teacherPassword" type="password" inputmode="text" placeholder="••••••••" required />
+                </label>
+                <label class="field">
+                  <span>Tên hiển thị (không bắt buộc)</span>
+                  <input id="teacherName" type="text" maxlength="30" placeholder="Cô Lan" />
+                </label>
+                <button class="primary" type="submit" style="width: 100%">Đăng nhập</button>
+              </form>
+              <div id="teacherMsg"></div>
+            </div>
+
+            <!-- Học viên -->
+            <div class="role-card">
+              <span class="emoji">🧒</span>
+              <h2>Tôi là học viên</h2>
+              <p class="hint">Nhập mã phòng cô gửi và tên của bạn.</p>
+              <form id="studentForm" autocomplete="off">
+                <label class="field">
+                  <span>Mã phòng</span>
+                  <input
+                    id="roomCode"
+                    type="text"
+                    inputmode="latin"
+                    autocapitalize="characters"
+                    spellcheck="false"
+                    maxlength="8"
+                    placeholder="K7M4QP"
+                    required
+                    style="text-transform: uppercase; letter-spacing: 4px; font-weight: 900"
+                  />
+                </label>
+                <label class="field">
+                  <span>Tên của bạn</span>
+                  <input id="studentName" type="text" maxlength="30" placeholder="Bé Minh" required />
+                </label>
+                <button class="primary" type="submit" style="width: 100%">Vào phòng</button>
+              </form>
+              <div id="studentMsg"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ Bảng điều khiển giáo viên ============ -->
+        <section id="dashView" class="card dash hidden">
+          <div class="dash-head">
+            <h2 id="helloTeacher">Xin chào 👋</h2>
+            <div class="tool-group">
+              <button id="btnLogout" class="ghost" style="background: #eef3fb; color: #16233a">Đăng xuất</button>
+            </div>
+          </div>
+
+          <div class="dash-cols">
+            <!-- Cột trái: danh sách bài học + phòng -->
+            <div style="display: flex; flex-direction: column; gap: 18px">
+              <div class="panel">
+                <h3>📚 Bài học của cô</h3>
+                <ul id="lessonList" class="lesson-list"></ul>
+                <div id="lessonListEmpty" class="notice info">Chưa có bài học nào. Cô hãy tạo bài học ở khung bên phải.</div>
+              </div>
+
+              <div class="panel room-box">
+                <h3>🚪 Phòng học</h3>
+                <div id="noRoom" class="notice info">Chọn một bài học rồi bấm <b>Tạo phòng</b>.</div>
+                <div id="roomInfo" class="hidden">
+                  <div style="text-align: center; margin-bottom: 8px">
+                    <div class="room-code-big" id="roomCodeBig">------</div>
+                    <small style="color: var(--ink-soft)">Mã phòng · hết hạn sau <span id="ttlHours">12</span> giờ</small>
+                  </div>
+                  <div class="room-link">
+                    <span id="roomLinkText" style="flex: 1"></span>
+                    <button id="btnCopyLink" title="Sao chép link">📋</button>
+                  </div>
+                  <div class="tool-group" style="margin-top: 12px">
+                    <button id="btnEnterRoom" class="primary" style="flex: 1">Vào phòng ngay</button>
+                    <button id="btnNewRoom" title="Tạo phòng mới">🔄 Phòng mới</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cột phải: tạo bài học -->
+            <div class="panel">
+              <h3>➕ Tạo bài học mới</h3>
+              <form id="lessonForm">
+                <label class="field">
+                  <span>Tên bài học</span>
+                  <input id="lessonTitle" type="text" maxlength="120" placeholder="Words Present" required />
+                </label>
+
+                <label class="field">
+                  <span>Loại bài học</span>
+                  <select id="lessonType">
+                    <option value="slides">Slide ảnh (nên dùng — nét vẽ khớp tuyệt đối)</option>
+                    <option value="video">Video bài học (URL mp4 / m3u8)</option>
+                  </select>
+                </label>
+
+                <div id="slidesPane">
+                  <div id="dropzone" class="dropzone" tabindex="0" role="button">
+                    <div style="font-size: 30px">🖼️</div>
+                    <div><b>Bấm để chọn ảnh</b> hoặc kéo thả ảnh vào đây</div>
+                    <div style="font-size: 12.5px; margin-top: 4px">
+                      JPEG / PNG / WEBP · tối đa <span id="maxSlides">40</span> ảnh · mỗi ảnh ≤ <span id="maxMB">5</span> MB
+                    </div>
+                  </div>
+                  <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" multiple class="sr-only" />
+                  <ul id="fileList" class="file-list"></ul>
+                  <div style="font-size: 12.5px; color: var(--ink-soft); margin-top: 6px">
+                    Mẹo: kéo thả từng dòng để đổi thứ tự, hoặc dùng nút ▲ ▼.
+                  </div>
+                </div>
+
+                <div id="videoPane" class="hidden">
+                  <label class="field">
+                    <span>URL video</span>
+                    <input id="videoUrl" type="url" placeholder="https://example.com/bai-hoc.mp4" />
+                  </label>
+                  <div class="notice warn">
+                    Video phải cho phép phát chéo nguồn (CORS) nếu nằm ở domain khác. Nên dùng link mp4 trực tiếp.
+                  </div>
+                </div>
+
+                <button class="primary" type="submit" id="btnCreateLesson" style="width: 100%; margin-top: 10px">
+                  Tải bài học lên
+                </button>
+                <div id="lessonMsg"></div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="toasts" aria-live="polite"></div>
+    <script type="module" src="/js/home.js"></script>
+  </body>
+</html>

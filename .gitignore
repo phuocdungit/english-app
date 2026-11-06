@@ -1,0 +1,27 @@
+# Bí mật và cấu hình cục bộ
+.env
+.env.local
+*.pem
+
+# Dữ liệu sinh ra khi chạy
+data/*.json
+!data/.gitkeep
+uploads/*
+!uploads/.gitkeep
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Hệ điều hành / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Kết quả test / coverage
+coverage/
+.nyc_output/
+demo-slides/
