@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+    <meta name="theme-color" content="#1b5fd0" />
+    <meta name="robots" content="noindex" />
+    <title>Phòng học · Lớp học 1-1</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="room" id="roomRoot">
+      <!-- ============ Thanh trên ============ -->
+      <header class="topbar">
+        <div class="left">
+          <button id="btnBack" class="ghost" type="button" title="Thoát khỏi phòng" aria-label="Thoát">←</button>
+          <span class="code-chip" id="codeChip">------</span>
+          <span class="timer" id="timer" title="Thời gian buổi học">00:00</span>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="stars" id="stars" title="Sao thưởng"></div>
+        <div class="star-ctl hidden" id="starCtl">
+          <button id="btnStarMinus" type="button" title="Bớt một sao" aria-label="Bớt một sao">−</button>
+          <button id="btnStarPlus" type="button" title="Thêm một sao" aria-label="Thêm một sao">＋</button>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="right">
+          <span class="net-dot" id="netDot" title="Chất lượng mạng: chưa rõ"></span>
+          <button id="btnHelp" class="ghost" type="button">🙋 Trợ giúp</button>
+          <button id="btnEnd" class="danger hidden" type="button">Kết thúc buổi học</button>
+        </div>
+      </header>
+
+      <!-- ============ Vùng giữa: bài học + camera ============ -->
+      <div class="middle">
+        <div class="stage-wrap" id="stageWrap">
+          <div class="stage-frame" id="stageFrame">
+            <div class="stage-content" id="stageContent">
+              <img id="slideImg" alt="Slide bài học" draggable="false" />
+              <video id="lessonVideo" playsinline webkit-playsinline preload="metadata" class="hidden"></video>
+              <div id="screenView" class="hidden"></div>
+            </div>
+
+            <canvas id="board"></canvas>
+            <div id="laserLayer"></div>
+
+            <!-- Điều khiển slide (giáo viên bấm được, học viên chỉ xem) -->
+            <div class="stage-controls" id="slideControls">
+              <button id="btnPrev" type="button">◀</button>
+              <span class="page-label" id="pageLabel">1/1</span>
+              <button id="btnNext" type="button">▶</button>
+            </div>
+
+            <!-- Điều khiển video bài học -->
+            <div class="stage-controls hidden" id="videoControls">
+              <button id="btnPlayPause" type="button">▶</button>
+              <input id="videoSeek" type="range" min="0" max="1000" step="1" value="0" aria-label="Thanh tiến trình video" />
+              <span class="vtime" id="videoTime">0:00</span>
+            </div>
+
+            <div class="draw-lock-note hidden" id="drawLockNote">🔒 Cô đang tạm khoá bút</div>
+            <div class="wait-note hidden" id="waitNote">⏳ Đang chờ cô vào phòng…</div>
+            <div class="screen-warn hidden" id="screenWarn"></div>
+            <div class="stage-overlay hidden" id="stageOverlay"></div>
+          </div>
+        </div>
+
+        <aside class="side" id="camTiles" aria-label="Camera"></aside>
+      </div>
+
+      <!-- ============ Thanh công cụ ============ -->
+      <div class="toolbar" id="toolbar">
+        <div class="tool-group" id="toolGroup">
+          <button class="tool-btn active" type="button" data-tool="pen" title="Bút"><span class="ico">✏️</span>Bút</button>
+          <button class="tool-btn" type="button" data-tool="highlighter" title="Bút dạ quang"><span class="ico">🖍️</span>Dạ quang</button>
+          <button class="tool-btn" type="button" data-tool="eraser" title="Tẩy (xoá nét bị chạm)"><span class="ico">🧽</span>Tẩy</button>
+          <button class="tool-btn" type="button" data-tool="laser" title="Con trỏ laser"><span class="ico">🔴</span>Laser</button>
+          <button class="tool-btn" type="button" id="btnUndo" title="Hoàn tác nét của bạn"><span class="ico">↩️</span>Undo</button>
+          <button class="tool-btn danger hidden" type="button" id="btnClear" title="Xoá toàn bộ nét (chỉ giáo viên)">
+            <span class="ico">🗑️</span>Xoá hết
+          </button>
+        </div>
+
+        <div class="tool-sep"></div>
+
+        <div class="tool-group">
+          <span class="tool-label">Màu</span>
+          <div class="swatches" id="swatches"></div>
+        </div>
+
+        <div class="tool-group">
+          <span class="tool-label">Nét</span>
+          <div class="widths" id="widths"></div>
+        </div>
+
+        <div class="tool-sep"></div>
+
+        <div class="tool-group">
+          <button class="tool-btn hidden" type="button" id="btnPerm" title="Bật/tắt quyền vẽ của học viên">
+            <span class="ico">🔓</span>Bút của bé
+          </button>
+          <button class="tool-btn on" type="button" id="btnMic" title="Bật/tắt micro"><span class="ico">🎙️</span>Mic</button>
+          <button class="tool-btn on" type="button" id="btnCam" title="Bật/tắt camera"><span class="ico">📷</span>Cam</button>
+          <button class="tool-btn hidden" type="button" id="btnShare" title="Chia sẻ màn hình">
+            <span class="ico">🖥️</span>Chia sẻ MH
+          </button>
+          <button class="tool-btn danger" type="button" id="btnLeave" title="Rời phòng"><span class="ico">🚪</span>Rời phòng</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toasts" aria-live="polite"></div>
+    <!-- Socket.IO tự phục vụ client của nó tại /socket.io/socket.io.js (không phải ES module) -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/js/room.js"></script>
+  </body>
+</html>
